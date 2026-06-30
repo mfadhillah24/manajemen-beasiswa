@@ -34,4 +34,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(Mahasiswa::class);
     }
+
+    /**
+     * Check if the user has a specific role or any of the given roles.
+     *
+     * @param  string|array  $roles
+     * @return bool
+     */
+    public function hasRole(string|array $roles): bool
+    {
+        if (is_array($roles)) {
+            return in_array($this->role, $roles);
+        }
+
+        return $this->role === $roles;
+    }
 }

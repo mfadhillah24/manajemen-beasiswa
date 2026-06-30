@@ -136,14 +136,17 @@ class PendaftaranController extends Controller
      */
     public function show(Pendaftaran $pendaftaran)
     {
-        // Pastikan hanya mahasiswa bersangkutan yang bisa melihat detailnya
-        if ($pendaftaran->mahasiswa_id !== Auth::user()->mahasiswa->id) {
+        $user = Auth::user();
+        $isOwner = $user->mahasiswa && $pendaftaran->mahasiswa_id === $user->mahasiswa->id;
+        $canVerify = $user->hasRole('Admin') || $user->hasRole('Komite');
+
+        if (!$isOwner && !$canVerify) {
             abort(403, 'Unauthorized action.');
         }
 
         return view('pendaftaran.show', [
             'title' => 'Detail Pendaftaran',
-            'pendaftaran' => $pendaftaran->load(['beasiswa.kategoriBeasiswa', 'mahasiswa.user']),
+            'pendaftaran' => $pendaftaran->load(['beasiswa.kategoriBeasiswa', 'mahasiswa.user', 'dokumens']),
         ]);
     }
 }

@@ -29,4 +29,9 @@ class Pendaftaran extends Model
     {
         return $this->belongsTo(Beasiswa::class);
     }
+
+    public function dokumens()
+    {
+        return $this->hasMany(Dokumen::class);
+    }
 }

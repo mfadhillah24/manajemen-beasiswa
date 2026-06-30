@@ -28,7 +28,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/user', UserController::class)->middleware('role:Superadmin');
     Route::resource('/beasiswa', BeasiswaController::class)->middleware('role:Superadmin,Admin');
-    Route::resource('/pendaftaran', PendaftaranController::class)->middleware('role:Mahasiswa');
+    
+    Route::resource('/pendaftaran', PendaftaranController::class)->except(['show'])->middleware('role:Mahasiswa');
+    Route::get('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'show'])->name('pendaftaran.show')->middleware('role:Mahasiswa,Admin,Komite');
+
+    Route::post('/pendaftaran/{pendaftaran}/dokumen', [App\Http\Controllers\DokumenController::class, 'store'])->name('dokumen.store')->middleware('role:Mahasiswa');
+    Route::delete('/dokumen/{dokumen}', [App\Http\Controllers\DokumenController::class, 'destroy'])->name('dokumen.destroy')->middleware('role:Mahasiswa');
+    Route::patch('/dokumen/{dokumen}/verify', [App\Http\Controllers\DokumenController::class, 'verifyDocument'])->name('dokumen.verify')->middleware('role:Admin,Komite');
 
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
     Route::put('/setting/{setting}/update', [SettingController::class, 'update'])->name('setting.update');
