@@ -29,12 +29,20 @@ Route::middleware('auth')->group(function () {
     Route::resource('/user', UserController::class)->middleware('role:Superadmin');
     Route::resource('/beasiswa', BeasiswaController::class)->middleware('role:Superadmin,Admin');
     
-    Route::resource('/pendaftaran', PendaftaranController::class)->except(['show'])->middleware('role:Mahasiswa');
-    Route::get('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'show'])->name('pendaftaran.show')->middleware('role:Mahasiswa,Admin,Komite');
-
-    Route::post('/pendaftaran/{pendaftaran}/dokumen', [App\Http\Controllers\DokumenController::class, 'store'])->name('dokumen.store')->middleware('role:Mahasiswa');
+    Route::resource('/pendaftaran', PendaftaranController::class)->only(['index', 'create', 'store', 'show'])->middleware('role:Mahasiswa,Admin,Komite');
+    Route::patch('/pendaftaran/{pendaftaran}/verify', [App\Http\Controllers\PendaftaranController::class, 'verify'])->name('pendaftaran.verify')->middleware('role:Admin,Komite');
+    
+    Route::post('/dokumen/{pendaftaran}', [App\Http\Controllers\DokumenController::class, 'store'])->name('dokumen.store')->middleware('role:Mahasiswa');
     Route::delete('/dokumen/{dokumen}', [App\Http\Controllers\DokumenController::class, 'destroy'])->name('dokumen.destroy')->middleware('role:Mahasiswa');
     Route::patch('/dokumen/{dokumen}/verify', [App\Http\Controllers\DokumenController::class, 'verifyDocument'])->name('dokumen.verify')->middleware('role:Admin,Komite');
+
+    Route::get('/seleksi', [App\Http\Controllers\SeleksiController::class, 'index'])->name('seleksi.index')->middleware('role:Komite,Admin');
+    Route::get('/seleksi/{pendaftaran}/create', [App\Http\Controllers\SeleksiController::class, 'create'])->name('seleksi.create')->middleware('role:Komite');
+    Route::post('/seleksi/{pendaftaran}', [App\Http\Controllers\SeleksiController::class, 'store'])->name('seleksi.store')->middleware('role:Komite');
+    Route::get('/seleksi/detail/{seleksi}', [App\Http\Controllers\SeleksiController::class, 'show'])->name('seleksi.show')->middleware('role:Komite,Admin');
+
+    Route::resource('/akademik', App\Http\Controllers\MahasiswaController::class)->only(['index', 'edit', 'update'])->middleware('role:Admin,Superadmin');
+    Route::get('/profil-akademik', [App\Http\Controllers\MahasiswaController::class, 'profile'])->name('akademik.profile')->middleware('role:Mahasiswa');
 
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
     Route::put('/setting/{setting}/update', [SettingController::class, 'update'])->name('setting.update');

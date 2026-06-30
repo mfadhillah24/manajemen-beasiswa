@@ -34,4 +34,9 @@ class Pendaftaran extends Model
     {
         return $this->hasMany(Dokumen::class);
     }
+
+    public function seleksi()
+    {
+        return $this->hasOne(Seleksi::class);
+    }
 }

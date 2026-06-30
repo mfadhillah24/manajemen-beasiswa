@@ -74,6 +74,13 @@
                 </div>
 
                 <div class="text-end mt-4">
+                    @if(Auth::user()->hasRole('Admin') && $pendaftaran->status_pendaftaran == 'Submitted')
+                    <form action="{{ route('pendaftaran.verify', $pendaftaran->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah semua dokumen sudah divalidasi dan Anda yakin ingin memverifikasi pendaftaran ini?')">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn btn-warning me-2"><i class='bx bx-check-shield'></i> Verifikasi Pendaftaran</button>
+                    </form>
+                    @endif
                     <a href="{{ route('pendaftaran.index') }}" class="btn btn-primary">Kembali</a>
                 </div>
             </div>

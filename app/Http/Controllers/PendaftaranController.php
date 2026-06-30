@@ -149,4 +149,21 @@ class PendaftaranController extends Controller
             'pendaftaran' => $pendaftaran->load(['beasiswa.kategoriBeasiswa', 'mahasiswa.user', 'dokumens']),
         ]);
     }
+
+    /**
+     * Update the status of pendaftaran to Verified by Admin
+     */
+    public function verify(Request $request, Pendaftaran $pendaftaran)
+    {
+        $user = Auth::user();
+        if (!$user->hasRole('Admin') && !$user->hasRole('Komite')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $pendaftaran->update([
+            'status_pendaftaran' => 'Verified'
+        ]);
+
+        return back()->withSuccess('Pendaftaran berhasil diverifikasi. Peserta sekarang masuk ke tahap seleksi Komite.');
+    }
 }

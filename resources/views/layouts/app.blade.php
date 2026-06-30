@@ -298,14 +298,40 @@
                         <span>Kelola Beasiswa</span>
                     </a>
                 </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('akademik.*') ? '' : 'collapsed' }}"
+                        href="{{ route('akademik.index') }}">
+                        <i class='bx bx-id-card'></i>
+                        <span>Data Akademik</span>
+                    </a>
+                </li>
             @endif
 
             @if (Auth::user()->role == 'Mahasiswa')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('akademik.profile') ? '' : 'collapsed' }}"
+                        href="{{ route('akademik.profile') }}">
+                        <i class='bx bx-user-circle'></i>
+                        <span>Profil Akademik</span>
+                    </a>
+                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('pendaftaran.*') ? '' : 'collapsed' }}"
                         href="{{ route('pendaftaran.index') }}">
                         <i class='bx bx-edit-alt'></i>
                         <span>Pendaftaran Beasiswa</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (in_array(Auth::user()->role, ['Komite', 'Admin']))
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('seleksi.*') ? '' : 'collapsed' }}"
+                        href="{{ route('seleksi.index') }}">
+                        <i class='bx bx-selection'></i>
+                        <span>Seleksi Beasiswa</span>
                     </a>
                 </li>
             @endif
