@@ -290,6 +290,26 @@
                 </li>
             @endif
 
+            @if (in_array(Auth::user()->role, ['Superadmin', 'Admin']))
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('beasiswa.*') ? '' : 'collapsed' }}"
+                        href="{{ route('beasiswa.index') }}">
+                        <i class='bx bx-award'></i>
+                        <span>Kelola Beasiswa</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (Auth::user()->role == 'Mahasiswa')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('pendaftaran.*') ? '' : 'collapsed' }}"
+                        href="{{ route('pendaftaran.index') }}">
+                        <i class='bx bx-edit-alt'></i>
+                        <span>Pendaftaran Beasiswa</span>
+                    </a>
+                </li>
+            @endif
+
 
         </ul>
 
