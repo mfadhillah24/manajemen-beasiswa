@@ -324,6 +324,14 @@
                         <span>Pendaftaran Beasiswa</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('prestasi.*') ? '' : 'collapsed' }}"
+                        href="{{ route('prestasi.index') }}">
+                        <i class='bx bx-trophy'></i>
+                        <span>Prestasi Saya</span>
+                    </a>
+                </li>
             @endif
 
             @if (in_array(Auth::user()->role, ['Komite', 'Admin']))
@@ -332,6 +340,26 @@
                         href="{{ route('seleksi.index') }}">
                         <i class='bx bx-selection'></i>
                         <span>Seleksi Beasiswa</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (in_array(Auth::user()->role, ['Admin', 'Superadmin']))
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('pencairan.*') ? '' : 'collapsed' }}"
+                        href="{{ route('pencairan.index') }}">
+                        <i class='bx bx-transfer'></i>
+                        <span>Pencairan Beasiswa</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (Auth::user()->role == 'Mahasiswa')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('pencairan.riwayat') ? '' : 'collapsed' }}"
+                        href="{{ route('pencairan.riwayat') }}">
+                        <i class='bx bx-wallet'></i>
+                        <span>Riwayat & LPJ</span>
                     </a>
                 </li>
             @endif

@@ -39,4 +39,9 @@ class Pendaftaran extends Model
     {
         return $this->hasOne(Seleksi::class);
     }
+
+    public function pencairan()
+    {
+        return $this->hasOne(Pencairan::class);
+    }
 }

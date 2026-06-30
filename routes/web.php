@@ -46,6 +46,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/prestasi', App\Http\Controllers\PrestasiController::class)->except(['show'])->middleware('role:Mahasiswa');
 
+    // Pencairan (Admin)
+    Route::resource('/pencairan', App\Http\Controllers\PencairanController::class)->only(['index', 'create', 'store', 'show'])->middleware('role:Admin,Superadmin');
+    Route::patch('/pencairan/{pencairan}/verifikasi-laporan', [App\Http\Controllers\PencairanController::class, 'verifikasiLaporan'])->name('pencairan.verifikasi_laporan')->middleware('role:Admin,Superadmin');
+
+    // Laporan LPJ (Mahasiswa)
+    Route::get('/riwayat-pencairan', [App\Http\Controllers\PencairanController::class, 'riwayatMahasiswa'])->name('pencairan.riwayat')->middleware('role:Mahasiswa');
+    Route::patch('/pencairan/{pencairan}/upload-laporan', [App\Http\Controllers\PencairanController::class, 'uploadLaporan'])->name('pencairan.upload_laporan')->middleware('role:Mahasiswa');
+
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
     Route::put('/setting/{setting}/update', [SettingController::class, 'update'])->name('setting.update');
 });
