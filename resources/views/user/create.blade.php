@@ -73,6 +73,9 @@
                             <option value="">Pilih Role</option>
                             <option value="Superadmin" @selected(old('role') == 'Superadmin')>Superadmin</option>
                             <option value="Admin" @selected(old('role') == 'Admin')>Admin</option>
+                            <option value="Mahasiswa" @selected(old('role') == 'Mahasiswa')>Mahasiswa</option>
+                            <option value="Komite" @selected(old('role') == 'Komite')>Komite</option>
+                            <option value="Pimpinan" @selected(old('role') == 'Pimpinan')>Pimpinan</option>
                         </select>
                         @error('role')
                             <div class="invalid-feedback">
