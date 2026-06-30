@@ -9,9 +9,11 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold m-0">Daftar Pencairan Dana Beasiswa</h5>
-                <a href="{{ route('pencairan.create') }}" class="btn btn-primary">
-                    <i class='bx bx-plus me-1'></i> Input Pencairan Baru
-                </a>
+                @if(in_array(Auth::user()->role, ['Admin', 'Superadmin']))
+                    <a href="{{ route('pencairan.create') }}" class="btn btn-primary">
+                        <i class='bx bx-plus me-1'></i> Input Pencairan Baru
+                    </a>
+                @endif
             </div>
 
             <div class="table-responsive">

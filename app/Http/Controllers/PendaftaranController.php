@@ -7,6 +7,7 @@ use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\LogHelper;
 
 class PendaftaranController extends Controller
 {
@@ -16,15 +17,27 @@ class PendaftaranController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
-        // Pastikan user memiliki data mahasiswa
+
+        // Admin dan Komite: tampilkan semua pendaftaran untuk diverifikasi
+        if ($user->hasRole(['Admin', 'Komite'])) {
+            $pendaftarans = Pendaftaran::with(['beasiswa', 'mahasiswa.user'])
+                ->latest()
+                ->get();
+
+            return view('pendaftaran.admin_index', [
+                'title'        => 'Daftar Semua Pendaftaran',
+                'pendaftarans' => $pendaftarans,
+            ]);
+        }
+
+        // Mahasiswa: hanya tampilkan miliknya sendiri
         $mahasiswa = $user->mahasiswa;
 
         if (!$mahasiswa) {
             return view('pendaftaran.index', [
-                'title' => 'Pendaftaran Beasiswa',
-                'error' => 'Profil akademik Anda belum terdaftar. Silakan hubungi Administrator untuk melengkapi data NIM & IPK Anda.',
-                'beasiswas' => [],
+                'title'        => 'Pendaftaran Beasiswa',
+                'error'        => 'Profil akademik Anda belum terdaftar. Silakan hubungi Administrator untuk melengkapi data NIM & IPK Anda.',
+                'beasiswas'    => [],
                 'pendaftarans' => [],
             ]);
         }
@@ -43,8 +56,8 @@ class PendaftaranController extends Controller
             ->get();
 
         return view('pendaftaran.index', [
-            'title' => 'Pendaftaran Beasiswa',
-            'beasiswas' => $beasiswas,
+            'title'        => 'Pendaftaran Beasiswa',
+            'beasiswas'    => $beasiswas,
             'pendaftarans' => $pendaftarans,
         ]);
     }
@@ -123,6 +136,8 @@ class PendaftaranController extends Controller
                 'status_pendaftaran' => 'Submitted',
             ]);
 
+            LogHelper::record('Mendaftar Beasiswa', 'Mahasiswa mendaftar beasiswa: ' . $beasiswa->nama_beasiswa);
+
             DB::commit();
             return to_route('pendaftaran.index')->withSuccess('Pendaftaran beasiswa berhasil dikirim.');
         } catch (\Exception $e) {
@@ -163,6 +178,8 @@ class PendaftaranController extends Controller
         $pendaftaran->update([
             'status_pendaftaran' => 'Verified'
         ]);
+
+        LogHelper::record('Verifikasi Pendaftaran', 'Admin/Komite memverifikasi pendaftaran ID: ' . $pendaftaran->id);
 
         return back()->withSuccess('Pendaftaran berhasil diverifikasi. Peserta sekarang masuk ke tahap seleksi Komite.');
     }

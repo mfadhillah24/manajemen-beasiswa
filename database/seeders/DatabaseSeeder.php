@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             SeleksiSeeder::class,
             PrestasiSeeder::class,
             PencairanSeeder::class,
+            PengumumanSeeder::class,
+            LogAktivitasSeeder::class,
         ]);
     }
 }

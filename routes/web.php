@@ -36,18 +36,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/dokumen/{dokumen}', [App\Http\Controllers\DokumenController::class, 'destroy'])->name('dokumen.destroy')->middleware('role:Mahasiswa');
     Route::patch('/dokumen/{dokumen}/verify', [App\Http\Controllers\DokumenController::class, 'verifyDocument'])->name('dokumen.verify')->middleware('role:Admin,Komite');
 
-    Route::get('/seleksi', [App\Http\Controllers\SeleksiController::class, 'index'])->name('seleksi.index')->middleware('role:Komite,Admin');
+    Route::get('/seleksi', [App\Http\Controllers\SeleksiController::class, 'index'])->name('seleksi.index')->middleware('role:Komite,Admin,Pimpinan');
     Route::get('/seleksi/{pendaftaran}/create', [App\Http\Controllers\SeleksiController::class, 'create'])->name('seleksi.create')->middleware('role:Komite');
     Route::post('/seleksi/{pendaftaran}', [App\Http\Controllers\SeleksiController::class, 'store'])->name('seleksi.store')->middleware('role:Komite');
-    Route::get('/seleksi/detail/{seleksi}', [App\Http\Controllers\SeleksiController::class, 'show'])->name('seleksi.show')->middleware('role:Komite,Admin');
+    Route::get('/seleksi/detail/{seleksi}', [App\Http\Controllers\SeleksiController::class, 'show'])->name('seleksi.show')->middleware('role:Komite,Admin,Pimpinan');
 
-    Route::resource('/akademik', App\Http\Controllers\MahasiswaController::class)->only(['index', 'edit', 'update'])->middleware('role:Admin,Superadmin');
+    Route::resource('/akademik', App\Http\Controllers\MahasiswaController::class)->except(['show', 'destroy'])->middleware('role:Admin,Superadmin');
     Route::get('/profil-akademik', [App\Http\Controllers\MahasiswaController::class, 'profile'])->name('akademik.profile')->middleware('role:Mahasiswa');
 
     Route::resource('/prestasi', App\Http\Controllers\PrestasiController::class)->except(['show'])->middleware('role:Mahasiswa');
 
     // Pencairan (Admin)
-    Route::resource('/pencairan', App\Http\Controllers\PencairanController::class)->only(['index', 'create', 'store', 'show'])->middleware('role:Admin,Superadmin');
+    Route::resource('/pencairan', App\Http\Controllers\PencairanController::class)->only(['index', 'create', 'store', 'show'])->middleware('role:Admin,Superadmin,Pimpinan');
     Route::patch('/pencairan/{pencairan}/verifikasi-laporan', [App\Http\Controllers\PencairanController::class, 'verifikasiLaporan'])->name('pencairan.verifikasi_laporan')->middleware('role:Admin,Superadmin');
 
     // Laporan LPJ (Mahasiswa)
@@ -56,4 +56,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
     Route::put('/setting/{setting}/update', [SettingController::class, 'update'])->name('setting.update');
+
+    // Pengumuman
+    Route::resource('/pengumuman', App\Http\Controllers\PengumumanController::class)->except(['show'])->middleware('role:Admin,Superadmin,Pimpinan,Mahasiswa');
+
+    // Log Aktivitas
+    Route::get('/log-aktivitas', [App\Http\Controllers\LogAktivitasController::class, 'index'])->name('log-aktivitas.index')->middleware('role:Admin,Superadmin,Pimpinan');
 });

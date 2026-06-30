@@ -16,7 +16,7 @@
                                     id="pendaftaran_id" name="pendaftaran_id" required>
                                 <option value="">-- Pilih Mahasiswa --</option>
                                 @forelse($pendaftarans as $pend)
-                                    <option value="{{ $pend->id }}" {{ old('pendaftaran_id') == $pend->id ? 'selected' : '' }}>
+                                    <option value="{{ $pend->id }}" {{ (old('pendaftaran_id') ?? request('pendaftaran_id')) == $pend->id ? 'selected' : '' }}>
                                         {{ $pend->mahasiswa->user->name ?? '-' }} — {{ $pend->beasiswa->nama_beasiswa ?? '-' }}
                                     </option>
                                 @empty

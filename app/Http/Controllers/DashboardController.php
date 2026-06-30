@@ -11,16 +11,33 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalUsers = \App\Models\User::count();
-        $superadminCount = \App\Models\User::where('role', 'Superadmin')->count();
-        $adminCount = \App\Models\User::where('role', 'Admin')->count();
+        $user = Auth::user();
+        $role = $user->role;
 
-        return view('dashboard.index', [
+        $data = [
             'title' => 'Dashboard',
-            'totalUsers' => $totalUsers,
-            'superadminCount' => $superadminCount,
-            'adminCount' => $adminCount,
-        ]);
+            'role' => $role,
+        ];
+
+        if ($role === 'Mahasiswa') {
+            $mahasiswa = $user->mahasiswa;
+            $data['total_pendaftaran'] = $mahasiswa ? \App\Models\Pendaftaran::where('mahasiswa_id', $mahasiswa->id)->count() : 0;
+            $data['beasiswa_aktif'] = \App\Models\Beasiswa::where('status', 'Aktif')->where('tanggal_buka', '<=', now())->where('tanggal_tutup', '>=', now())->count();
+        } elseif ($role === 'Komite') {
+            $data['menunggu_seleksi'] = \App\Models\Pendaftaran::where('status_pendaftaran', 'Verified')->count();
+            $data['telah_dinilai'] = \App\Models\Seleksi::where('penilai_id', $user->id)->count();
+        } else {
+            // Admin, Superadmin, Pimpinan
+            $data['total_beasiswa'] = \App\Models\Beasiswa::count();
+            $data['total_pendaftar'] = \App\Models\Pendaftaran::count();
+            $data['diterima'] = \App\Models\Pendaftaran::where('status_pendaftaran', 'Approved')->count();
+            $data['dana_dicairkan'] = \App\Models\Pencairan::sum('nominal');
+            $data['totalUsers'] = \App\Models\User::count();
+            $data['superadminCount'] = \App\Models\User::where('role', 'Superadmin')->count();
+            $data['adminCount'] = \App\Models\User::where('role', 'Admin')->count();
+        }
+
+        return view('dashboard.index', $data);
     }
 
     public function show()

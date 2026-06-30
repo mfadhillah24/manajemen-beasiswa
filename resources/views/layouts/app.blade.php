@@ -280,6 +280,24 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pengumuman.*') ? '' : 'collapsed' }}"
+                    href="{{ route('pengumuman.index') }}">
+                    <i class='bx bx-bell'></i>
+                    <span>Pengumuman</span>
+                </a>
+            </li>
+
+            @if (in_array(Auth::user()->role, ['Admin', 'Superadmin', 'Pimpinan']))
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('log-aktivitas.*') ? '' : 'collapsed' }}"
+                        href="{{ route('log-aktivitas.index') }}">
+                        <i class='bx bx-history'></i>
+                        <span>Log Aktivitas</span>
+                    </a>
+                </li>
+            @endif
+
             @if (Auth::user()->role == 'Superadmin')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('user.*') ? '' : 'collapsed' }}"
@@ -308,6 +326,16 @@
                 </li>
             @endif
 
+            @if (in_array(Auth::user()->role, ['Admin', 'Komite']))
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('pendaftaran.*') ? '' : 'collapsed' }}"
+                        href="{{ route('pendaftaran.index') }}">
+                        <i class='bx bx-task'></i>
+                        <span>Verifikasi Pendaftaran</span>
+                    </a>
+                </li>
+            @endif
+
             @if (Auth::user()->role == 'Mahasiswa')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('akademik.profile') ? '' : 'collapsed' }}"
@@ -332,9 +360,16 @@
                         <span>Prestasi Saya</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('pencairan.riwayat') ? '' : 'collapsed' }}"
+                        href="{{ route('pencairan.riwayat') }}">
+                        <i class='bx bx-wallet'></i>
+                        <span>Riwayat Pencairan</span>
+                    </a>
+                </li>
             @endif
 
-            @if (in_array(Auth::user()->role, ['Komite', 'Admin']))
+            @if (in_array(Auth::user()->role, ['Komite', 'Admin', 'Pimpinan']))
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('seleksi.*') ? '' : 'collapsed' }}"
                         href="{{ route('seleksi.index') }}">
@@ -344,7 +379,7 @@
                 </li>
             @endif
 
-            @if (in_array(Auth::user()->role, ['Admin', 'Superadmin']))
+            @if (in_array(Auth::user()->role, ['Admin', 'Superadmin', 'Pimpinan']))
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('pencairan.*') ? '' : 'collapsed' }}"
                         href="{{ route('pencairan.index') }}">

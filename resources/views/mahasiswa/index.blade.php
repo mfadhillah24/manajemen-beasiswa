@@ -9,7 +9,10 @@
     <div class="card shadow-lg border-0 mt-3">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold m-0">Daftar Data Akademik Pendaftar</h5>
+                <h5 class="fw-bold m-0">Daftar Data Akademik Mahasiswa</h5>
+                <a href="{{ route('akademik.create') }}" class="btn btn-primary">
+                    <i class='bx bx-plus me-1'></i> Tambah Mahasiswa
+                </a>
             </div>
 
             <div class="table-responsive">

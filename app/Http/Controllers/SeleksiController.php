@@ -7,6 +7,7 @@ use App\Models\Seleksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\LogHelper;
 
 class SeleksiController extends Controller
 {
@@ -73,6 +74,8 @@ class SeleksiController extends Controller
             } else {
                 $pendaftaran->update(['status_pendaftaran' => 'Rejected']);
             }
+
+            LogHelper::record('Penilaian Seleksi', 'Komite memberikan penilaian untuk pendaftaran ID: ' . $pendaftaran->id . ' dengan hasil: ' . $pendaftaran->status_pendaftaran);
 
             DB::commit();
             return to_route('seleksi.index')->withSuccess('Penilaian berhasil disimpan.');

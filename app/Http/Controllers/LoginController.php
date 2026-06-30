@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
+use App\Helpers\LogHelper;
 
 class LoginController extends Controller
 {
@@ -43,10 +44,10 @@ class LoginController extends Controller
                 cookie()->queue('remember_email', $request->email, 60 * 24 * 30); // 30 days
                 cookie()->queue('remember_password', $request->password, 60 * 24 * 30); // 30 days
             } else {
-                // Clear cookies if remember is not checked
-                cookie()->queue(cookie()->forget('remember_email'));
                 cookie()->queue(cookie()->forget('remember_password'));
             }
+
+            LogHelper::record('Login', 'User berhasil login ke sistem');
 
             return to_route('dashboard.index')->withSuccess('Login berhasil');
         }
@@ -56,6 +57,7 @@ class LoginController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        LogHelper::record('Logout', 'User logout dari sistem');
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
