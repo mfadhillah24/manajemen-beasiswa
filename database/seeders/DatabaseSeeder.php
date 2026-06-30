@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PendaftaranSeeder::class,
             DokumenSeeder::class,
             SeleksiSeeder::class,
+            PrestasiSeeder::class,
         ]);
     }
 }

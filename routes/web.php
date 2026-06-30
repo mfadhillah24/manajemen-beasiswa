@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/akademik', App\Http\Controllers\MahasiswaController::class)->only(['index', 'edit', 'update'])->middleware('role:Admin,Superadmin');
     Route::get('/profil-akademik', [App\Http\Controllers\MahasiswaController::class, 'profile'])->name('akademik.profile')->middleware('role:Mahasiswa');
 
+    Route::resource('/prestasi', App\Http\Controllers\PrestasiController::class)->except(['show'])->middleware('role:Mahasiswa');
+
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
     Route::put('/setting/{setting}/update', [SettingController::class, 'update'])->name('setting.update');
 });
